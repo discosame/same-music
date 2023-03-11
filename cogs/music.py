@@ -66,8 +66,10 @@ class Voices(VoiceClient):
         with YoutubeDL(ydl_opts) as ydl:
             video = await asyncio.to_thread(ydl.extract_info, prompt, download=False)
             video["url"] = prompt
-            video["filename"] = ydl.prepare_filename(video)
-            print(video["filename"])
+            f = ydl.prepare_filename(video)
+            print(f)
+            video["filename"] = f
+            print(video)
             
             self.append_item(video)
             await self.download(ydl, video["url"])
