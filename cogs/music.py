@@ -79,6 +79,8 @@ class Voices(VoiceClient):
             search_results =await asyncio.to_thread(ydl.extract_info, f"ytsearch:{prompt}", download=False)
             video = search_results['entries'][0]
             print(video)
+            video["filename"] = ydl.prepare_filename(video)
+            print(video["filename"])
 
             self.append_item(video)
 
