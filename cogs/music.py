@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 
 # YouTubeダウンロードオプション
 ydl_opts = {
+    'restrictfilenames': True,
     'outtmpl': '%(title)s.%(ext)s',
     'format': 'bestaudio/best',
     'extract_flat': True,
@@ -93,7 +94,7 @@ class Voices(VoiceClient):
         if "playlist" in prompt:
             played = await self.search_playlist(prompt)
         
-        elif "watch" in prompt:
+        elif "youtube.com" in prompt:
             played - await self.search_video(prompt)
         else:
             played = await self.search_title(prompt)
