@@ -98,7 +98,7 @@ class Voices(VoiceClient):
             played = await self.search_playlist(prompt)
         
         elif "youtube.com" in prompt:
-            played - await self.search_video(prompt)
+            played = await self.search_video(prompt)
         else:
             played = await self.search_title(prompt)
             
