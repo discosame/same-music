@@ -113,7 +113,7 @@ class Voices(VoiceClient):
                 "video_title": video["title"],
                 "video_url": video["url"],
                 "thumbnail_url": video["thumbnails"][-1]["url"],
-                "filename": video["filename"],
+                "filename": video["filename"].replace(".webm", ".mp3"),
                 "duration": video["duration"],
                 "start_time": start_time,
                 "end_time": start_time + timedelta(seconds=video["duration"])
