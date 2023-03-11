@@ -60,6 +60,7 @@ class Voices(VoiceClient):
             return played
 
     async def search_video(self, prompt: str):
+        print("search video")
         played = False
         ydl_opts["outtmpl"] = f"songs/{self.channel.id}/%(title)s.%(ext)s"
 
