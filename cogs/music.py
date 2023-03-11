@@ -70,7 +70,6 @@ class Voices(VoiceClient):
             f = ydl.prepare_filename(video)
             print(f)
             video["filename"] = f
-            print(video)
             
             self.append_item(video)
             await self.download(ydl, video["url"])
@@ -114,7 +113,7 @@ class Voices(VoiceClient):
                 "video_title": video["title"],
                 "video_url": video["url"],
                 "thumbnail_url": video["thumbnails"][-1]["url"],
-                "filename": f"songs/{self.channel.id}/{video['title']}.mp3",
+                "filename": video["filename"],
                 "duration": video["duration"],
                 "start_time": start_time,
                 "end_time": start_time + timedelta(seconds=video["duration"])
