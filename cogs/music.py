@@ -19,7 +19,7 @@ ydl_opts = {
     'postprocessors': [{
         'key': 'FFmpegExtractAudio',
         'preferredcodec': 'mp3',
-        'preferredquality': '320',
+        'preferredquality': '192',
     }]
 }
 
@@ -48,9 +48,7 @@ class Voices(VoiceClient):
                     await self.download(ydl, video["url"])
                 except:
                     self.bot.dispatch("fail_download", self)
-                    continue
-                f = ydl.prepare_filename(video)
-                video["filename"] = f
+                    continue   
                 self.append_item(video)
                 
                 if i == 0 and not self.is_playing():
@@ -62,15 +60,12 @@ class Voices(VoiceClient):
             return played
 
     async def search_video(self, prompt: str):
-        print("search video")
         played = False
         ydl_opts["outtmpl"] = f"songs/{self.channel.id}/%(title)s.%(ext)s"
 
         with YoutubeDL(ydl_opts) as ydl:
             video = await asyncio.to_thread(ydl.extract_info, prompt, download=False)
             video["url"] = prompt
-            f = ydl.prepare_filename(video)
-            video["filename"] = f
             
             self.append_item(video)
             await self.download(ydl, video["url"])
@@ -83,8 +78,7 @@ class Voices(VoiceClient):
         with YoutubeDL(ydl_opts) as ydl:
             search_results =await asyncio.to_thread(ydl.extract_info, f"ytsearch:{prompt}", download=False)
             video = search_results['entries'][0]
-            f = ydl.prepare_filename(video)
-            video["filename"] = f
+            print(video)
 
             self.append_item(video)
 
@@ -100,8 +94,8 @@ class Voices(VoiceClient):
         if "playlist" in prompt:
             played = await self.search_playlist(prompt)
         
-        elif "youtu.be" in prompt:
-            played = await self.search_video(prompt)
+        elif "youtube.com" in prompt:
+            played - await self.search_video(prompt)
         else:
             played = await self.search_title(prompt)
             
@@ -116,7 +110,7 @@ class Voices(VoiceClient):
                 "video_title": video["title"],
                 "video_url": video["url"],
                 "thumbnail_url": video["thumbnails"][-1]["url"],
-                "filename": video["filename"].replace(".webm", ".mp3").replace(".NA", ".mp3"),
+                "filename": f"songs/{self.channel.id}/{video['title']}.mp3",
                 "duration": video["duration"],
                 "start_time": start_time,
                 "end_time": start_time + timedelta(seconds=video["duration"])
@@ -171,10 +165,7 @@ class Voices(VoiceClient):
         
         self.bot.dispatch("play_next_song", self)
         
-
-    async def disconnect(self):
-        info = self.bot.info[self.channel.id]
-        self.bot.info[self.channel.id]["client"].items = []
+    async def _disconnect(self):
         import shutil
         try:
             shutil.rmtree(f'songs/{self.channel.id}/')
@@ -187,6 +178,20 @@ class Voices(VoiceClient):
             pass
         
         await super().disconnect(force=True)
+        
+
+
+    async def disconnect(self):
+        if not (info := self.bot.info.get(self.channel.id)):
+            return await self._disconnect()
+            
+        
+        if not (client := info.get("client")):
+            self.bot.info[self.channel.id].info["client"] = self
+        
+        
+        self.bot.info[self.channel.id]["client"].items = {}
+        await self._disconnect()
         
     
     async def pause(self):

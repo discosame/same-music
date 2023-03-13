@@ -1,0 +1,12 @@
+version: "3"
+services:
+  days:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python main.py
+    working_dir: "/project"
+    tty: true
+    volumes:
+      - .:/project
