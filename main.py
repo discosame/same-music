@@ -1,12 +1,14 @@
 from discord.ext import commands
 from discord import Intents
-
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 intent = Intents.all()
 
+
 TOKEN = os.environ.get("TOKEN")
-print(TOKEN)
 
 extensions = ("music",)
 
