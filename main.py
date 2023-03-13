@@ -1,9 +1,6 @@
 from discord.ext import commands
 from discord import Intents
-from dotenv import load_dotenv
 import os
-
-load_dotenv()
 
 intent = Intents.all()
 
