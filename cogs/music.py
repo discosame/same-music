@@ -190,7 +190,7 @@ class Voices(VoiceClient):
             self.bot.info[self.channel.id].info["client"] = self
         
         
-        self.bot.info[self.channel.id]["client"].items = {}
+        self.bot.info[self.channel.id]["client"].items = []
         await self._disconnect()
         
     
