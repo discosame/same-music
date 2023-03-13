@@ -174,7 +174,7 @@ class Voices(VoiceClient):
 
     async def disconnect(self):
         info = self.bot.info[self.channel.id]
-        self.bot.info[self.channel.id]["client"].items = {}
+        self.bot.info[self.channel.id]["client"].items = []
         import shutil
         try:
             shutil.rmtree(f'songs/{self.channel.id}/')
