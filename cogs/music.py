@@ -49,6 +49,10 @@ class Voices(VoiceClient):
                 except:
                     self.bot.dispatch("fail_download", self)
                     continue   
+                
+                f = ydl.prepare_filename(video)
+                video["filename"] = f
+                
                 self.append_item(video)
                 
                 if i == 0 and not self.is_playing():
@@ -66,6 +70,8 @@ class Voices(VoiceClient):
         with YoutubeDL(ydl_opts) as ydl:
             video = await asyncio.to_thread(ydl.extract_info, prompt, download=False)
             video["url"] = prompt
+            f = ydl.prepare_filename(video)
+            video["filename"] = f
             
             self.append_item(video)
             await self.download(ydl, video["url"])
@@ -78,7 +84,8 @@ class Voices(VoiceClient):
         with YoutubeDL(ydl_opts) as ydl:
             search_results =await asyncio.to_thread(ydl.extract_info, f"ytsearch:{prompt}", download=False)
             video = search_results['entries'][0]
-            print(video)
+            f = ydl.prepare_filename(video)
+            video["filename"] = f
 
             self.append_item(video)
 
@@ -110,7 +117,7 @@ class Voices(VoiceClient):
                 "video_title": video["title"],
                 "video_url": video["url"],
                 "thumbnail_url": video["thumbnails"][-1]["url"],
-                "filename": f"songs/{self.channel.id}/{video['title']}.mp3",
+                "filename": video["filename"].replace(".webm", ".mp3").replace(".NA", ".mp3"),
                 "duration": video["duration"],
                 "start_time": start_time,
                 "end_time": start_time + timedelta(seconds=video["duration"])
